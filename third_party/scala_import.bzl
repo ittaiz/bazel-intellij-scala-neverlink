@@ -1,4 +1,7 @@
 def _scala_import_impl(ctx):
+    runtime_jars = _collect(ctx.attr.runtime_deps)
+    if not ctx.attr.neverlink:
+      runtime_jars += ctx.attr.jar.files
     return struct(
         scala = struct(
           outputs = struct(
@@ -9,7 +12,7 @@ def _scala_import_impl(ctx):
         providers = [
           java_common.create_provider(
             compile_time_jars = ctx.attr.jar.files,
-            runtime_jars = ctx.attr.jar.files + _collect(ctx.attr.runtime_deps),
+            runtime_jars = runtime_jars,
           )
         ],
     )
@@ -24,6 +27,7 @@ scala_import = rule(
   implementation=_scala_import_impl,
   attrs={
       "jar": attr.label(),
-      "runtime_deps": attr.label_list()
+      "runtime_deps": attr.label_list(),
+      "neverlink": attr.bool(default=False, mandatory=False),
       },
 )

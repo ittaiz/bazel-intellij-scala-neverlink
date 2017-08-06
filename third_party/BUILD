@@ -10,5 +10,6 @@ scala_import(
     name = "javax_servlet_api_never_link",
     visibility = ["//visibility:public"],
     jar = "@javax_servlet_javax_servlet_api//jar",
-    runtime_deps = []
+    runtime_deps = [],
+    neverlink = True
 )
